@@ -1,6 +1,6 @@
 class Player:
-    def __init__(self, symbol):
-        self.symbol = symbol
+    def __init__(self, number=None):
+        self.number = number
 
     def get_move(self, state):
         raise NotImplementedError("Subclasses must implement the get_move method.")

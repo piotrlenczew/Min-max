@@ -20,13 +20,13 @@ class State:
 
     def is_winner(self, player):
         for i in range(3):
-            if all(self.board[i, j] == player.symbol for j in range(3)) or all(
-                self.board[j, i] == player.symbol for j in range(3)
+            if all(self.board[i, j] == player.number for j in range(3)) or all(
+                self.board[j, i] == player.number for j in range(3)
             ):
                 return True
 
-        if all(self.board[i, i] == player.symbol for i in range(3)) or all(
-            self.board[i, 2 - i] == player.symbol for i in range(3)
+        if all(self.board[i, i] == player.number for i in range(3)) or all(
+            self.board[i, 2 - i] == player.number for i in range(3)
         ):
             return True
 
@@ -38,4 +38,4 @@ class State:
 
     def make_move(self, move, player):
         row, col = move
-        self.board[row, col] = player.symbol
+        self.board[row, col] = player.number
