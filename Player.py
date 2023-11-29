@@ -13,7 +13,7 @@ class HumanPlayer(Player):
         while True:
             try:
                 row, col = [
-                    int(x) for x in input("Enter move (row, column): ").split(", ")
+                    int(x) for x in input("Enter move [row, column]: ").split(", ")
                 ]
                 move = (row, col)
 
@@ -41,7 +41,13 @@ class ComputerPlayer(Player):
             for j in range(state.board_size):
                 if state.is_valid_move((i, j)):
                     state.make_move((i, j), self.number)
-                    score = self.minimax(state, self.opponent_number(self.number), self.max_depth - 1, alfa, beta)
+                    score = self.minimax(
+                        state,
+                        self.opponent_number(self.number),
+                        self.max_depth - 1,
+                        alfa,
+                        beta,
+                    )
                     state.board[i][j] = 0
 
                     scores.append(score)
@@ -64,7 +70,13 @@ class ComputerPlayer(Player):
             for j in range(state.board_size):
                 if state.is_valid_move((i, j)):
                     state.make_move((i, j), player_number)
-                    score = self.minimax(state, self.opponent_number(player_number), depth - 1, alfa, beta)
+                    score = self.minimax(
+                        state,
+                        self.opponent_number(player_number),
+                        depth - 1,
+                        alfa,
+                        beta,
+                    )
                     state.board[i][j] = 0
 
                     if player_number == self.number:
