@@ -32,40 +32,54 @@ class ComputerPlayer(Player):
         self.max_depth = max_depth
 
     def get_move(self, state):
-        _, move = self.minimax(state, self.number, self.max_depth)
-        return move
-
-    def minimax(self, state, player_number, depth):
-        if state.is_winner(self.number):
-            return 10, None
-        elif state.is_winner(self.opponent_number(self.number)):
-            return -10, None
-        elif state.is_full():
-            return 0, None
-        elif depth == 0:
-            return self.heuristic(state), None
-
+        alfa = -100
+        beta = 100
         scores = []
         moves = []
 
         for i in range(state.board_size):
             for j in range(state.board_size):
                 if state.is_valid_move((i, j)):
-                    state.make_move((i, j), player_number)
-                    score, _ = self.minimax(
-                        state, self.opponent_number(player_number), depth - 1
-                    )
+                    state.make_move((i, j), self.number)
+                    score = self.minimax(state, self.opponent_number(self.number), self.max_depth - 1, alfa, beta)
                     state.board[i][j] = 0
 
                     scores.append(score)
                     moves.append((i, j))
 
+        max_index = scores.index(max(scores))
+        return moves[max_index]
+
+    def minimax(self, state, player_number, depth, alfa, beta):
+        if state.is_winner(self.number):
+            return 10
+        elif state.is_winner(self.opponent_number(self.number)):
+            return -10
+        elif state.is_full():
+            return 0
+        elif depth == 0:
+            return self.heuristic(state)
+
+        for i in range(state.board_size):
+            for j in range(state.board_size):
+                if state.is_valid_move((i, j)):
+                    state.make_move((i, j), player_number)
+                    score = self.minimax(state, self.opponent_number(player_number), depth - 1, alfa, beta)
+                    state.board[i][j] = 0
+
+                    if player_number == self.number:
+                        alfa = max(alfa, score)
+                        if alfa >= beta:
+                            return beta
+                    else:
+                        beta = min(beta, score)
+                        if beta <= alfa:
+                            return alfa
+
         if player_number == self.number:
-            max_index = scores.index(max(scores))
-            return scores[max_index], moves[max_index]
+            return alfa
         else:
-            min_index = scores.index(min(scores))
-            return scores[min_index], moves[min_index]
+            return beta
 
     def heuristic(self, state):
         result = 0
